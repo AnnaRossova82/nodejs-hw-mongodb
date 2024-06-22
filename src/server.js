@@ -2,6 +2,40 @@ import express from 'express';
 import cors from 'cors';
 import pino from 'pino-http';
 import dotenv from 'dotenv';
+import contactsRouter from './routes/contacts.js'; // Import the router
+
+dotenv.config();
+
+const setupServer = () => {
+  const app = express();
+  const port = process.env.PORT || 3001;
+
+  app.use(cors());
+  app.use(pino({
+    transport: {
+      target: 'pino-pretty',
+    },
+  }));
+
+  // Use the contacts router
+  app.use('/contacts', contactsRouter);
+
+  app.use((req, res) => {
+    res.status(404).json({ status: 404, message: 'Not found' });
+  });
+
+  app.listen(port, () => {
+    console.log(`Server is running on port ${port}`);
+  });
+};
+
+export default setupServer;
+
+
+/* import express from 'express';
+import cors from 'cors';
+import pino from 'pino-http';
+import dotenv from 'dotenv';
 import { getAllContacts, getContactById } from './services/contacts.js';
 
 dotenv.config();
@@ -58,4 +92,4 @@ const setupServer = () => {
 };
 
 export default setupServer;
-
+ */
