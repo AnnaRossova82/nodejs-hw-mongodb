@@ -1,34 +1,24 @@
 import Contact from '../db/models/Contact.js';
 
 export const getAllContacts = async () => {
-  try {
-    return await Contact.find();
-  } catch (error) {
-    throw new Error('Error fetching contacts', { cause: error });
-  }
+  return await Contact.find();
 };
 
 export const getContactById = async (id) => {
-  try {
-    return await Contact.findById(id);
-  } catch (error) {
-    throw new Error('Error fetching contact', { cause: error });
-  }
-};
-/* import Contact from '../db/models/Contact.js';
-
-export const getAllContacts = async () => {
-  try {
-    return await Contact.find();
-  } catch (error) {
-    throw new Error('Error fetching contacts', {error});
-  }
+  return await Contact.findById(id);
 };
 
-export const getContactById = async (id) => {
-  try {
-    return await Contact.findById(id);
-  } catch (error) {
-    throw new Error('Error fetching contact', {error});
-  }
-}; */
+export const createContact = async (contactData) => {
+  const contact = new Contact(contactData);
+  await contact.save();
+  return contact;
+};
+
+export const updateContact = async (id, updates) => {
+  return await Contact.findByIdAndUpdate(id, updates, { new: true });
+};
+
+export const deleteContact = async (id) => {
+  return await Contact.findByIdAndDelete(id);
+};
+
