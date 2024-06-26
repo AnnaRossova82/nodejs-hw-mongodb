@@ -12,7 +12,7 @@ import ctrlWrapper from '../middlewares/ctrlWrapper.js';
 const router = express.Router();
 
 router.get('/', ctrlWrapper(getContacts));
-router.get('/:contactId', isValidId, ctrlWrapper(getContactByIdController));
+router.get('/:contactId',  ctrlWrapper(getContactByIdController));
 router.post('/', ctrlWrapper(createContactController));
 router.patch('/:contactId', isValidId, ctrlWrapper(updateContactController));
 router.delete('/:contactId', isValidId, ctrlWrapper(deleteContactController));
