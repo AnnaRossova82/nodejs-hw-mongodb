@@ -1,14 +1,19 @@
 import { getAllContacts, getContactById, createContact, updateContact, deleteContact } from '../services/contacts.js';
 import createHttpError from 'http-errors';
 
+
+
 export const getContacts = async (req, res) => {
-  const contacts = await getAllContacts();
+  const { page = 1, perPage = 10, sortBy = 'name', sortOrder = 'asc', type, isFavourite } = req.query;
+  const contacts = await getAllContacts(Number(page), Number(perPage), sortBy, sortOrder, type, isFavourite);
   res.status(200).json({
-    status: 200,
-    message: 'Successfully found contacts!',
-    data: contacts,
+      status: 200,
+      message: 'Successfully found contacts!',
+      data: contacts,
   });
 };
+
+
 
 export const getContactByIdController = async (req, res) => {
   const contact = await getContactById(req.params.contactId);
