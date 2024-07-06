@@ -1,6 +1,6 @@
 import createHttpError from 'http-errors';
 import bcrypt from 'bcrypt';
-import User from '../db/models/user.js';
+import User from '../db/models/User.js';
 import Session from '../db/models/Session.js';
 import { randomBytes } from 'node:crypto';
 
