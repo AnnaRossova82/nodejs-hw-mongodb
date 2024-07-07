@@ -1,15 +1,27 @@
 import Contact from '../db/models/Contact.js';
 
-export const getAllContacts = async (page, perPage, sortBy, sortOrder, type, isFavourite, userId) => {
-  const query = { userId };
-  if (type) query.contactType = type;
-  if (isFavourite !== undefined) query.isFavourite = isFavourite;
+export const getAllContacts = async (page = 1, perPage = 10, sortBy = 'name', sortOrder = 'asc', type, isFavourite, userId) => {
+  const skip = (page - 1) * perPage;
+  const sortOrderValue = sortOrder === 'asc' ? 1 : -1;
+  const filter = { userId };
+  if (type) filter.contactType = type;
+  if (isFavourite !== undefined) filter.isFavourite = isFavourite;
 
-  const contacts = await Contact.find(query)
-    .sort({ [sortBy]: sortOrder })
-    .skip((page - 1) * perPage)
-    .limit(perPage);
-  return contacts;
+  const totalItems = await Contact.countDocuments(filter);
+  const contacts = await Contact.find(filter)
+      .skip(skip)
+      .limit(perPage)
+      .sort({ [sortBy]: sortOrderValue });
+
+  return {
+      contacts,
+      totalItems,
+      totalPages: Math.ceil(totalItems / perPage),
+      page,
+      perPage,
+      hasPreviousPage: page > 1,
+      hasNextPage: page < Math.ceil(totalItems / perPage),
+  };
 };
 
 export const getContactById = async (contactId, userId) => {

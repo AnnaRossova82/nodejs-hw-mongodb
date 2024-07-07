@@ -2,15 +2,20 @@ import { getAllContacts, getContactById, createContact, updateContact, deleteCon
 import createHttpError from 'http-errors';
 
 
-export const getContacts = async (req, res) => {
-  const { page = 1, perPage = 10, sortBy = 'name', sortOrder = 'asc', type, isFavourite } = req.query;
-  const userId = req.user._id;
-  const contacts = await getAllContacts(Number(page), Number(perPage), sortBy, sortOrder, type, isFavourite, userId);
+export const getContacts = async (req, res, next) => {
+  try {
+    const { page = 1, perPage = 10, sortBy = 'name', sortOrder = 'asc', type, isFavourite } = req.query;
+    const userId = req.user._id;
+
+    const contacts = await getAllContacts(Number(page), Number(perPage), sortBy, sortOrder, type, isFavourite, userId);
   res.status(200).json({
       status: 200,
       message: 'Successfully found contacts!',
       data: contacts,
   });
+  } catch (error) {
+    next(error);
+  }
 };
 
 export const getContactByIdController = async (req, res) => {
@@ -58,7 +63,7 @@ export const updateContactController = async (req, res) => {
 
 export const deleteContactController = async (req, res) => {
   const { contactId } = req.params;
-  const userId = req.user._id; 
+  const userId = req.user._id;
   const deletedContact = await deleteContact(contactId, userId);
   if (!deletedContact) {
     throw createHttpError(404, 'Contact not found');

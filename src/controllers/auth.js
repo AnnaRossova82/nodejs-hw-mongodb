@@ -10,24 +10,6 @@ const generateTokens = () => {
   return { accessToken, refreshToken };
 };
 
-const createSession = async (userId) => {
-  const tokens = generateTokens();
-  const newSession = await Session.create({
-    userId,
-    accessToken: tokens.accessToken,
-    refreshToken: tokens.refreshToken,
-    accessTokenValidUntil: new Date(Date.now() + 15 * 60 * 1000),
-    refreshTokenValidUntil: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000),
-  });
-  console.log('New session created:', newSession);
-  return newSession;
-};
-
-const setupResponseSession = (res, session) => {
-  res.cookie('refreshToken', session.refreshToken, { httpOnly: true, secure: true });
-  res.cookie('sessionid', session.accessToken, { httpOnly: true, secure: true });
-};
-
 export const login = async (req, res, next) => {
   try {
     const { email, password } = req.body;
@@ -41,14 +23,23 @@ export const login = async (req, res, next) => {
       throw createHttpError(401, 'Invalid email or password');
     }
 
-    await Session.findOneAndDelete({ userId: user._id });
-    const newSession = await createSession(user._id);
+    const tokens = generateTokens();
 
-    setupResponseSession(res, newSession);
+    await Session.findOneAndDelete({ userId: user._id });
+    const newSession = await Session.create({
+      userId: user._id,
+      accessToken: tokens.accessToken,
+      refreshToken: tokens.refreshToken,
+      accessTokenValidUntil: new Date(Date.now() + 15 * 60 * 1000),
+      refreshTokenValidUntil: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000),
+    });
+    console.log('New session created:', newSession);
+
+    res.cookie('refreshToken', tokens.refreshToken, { httpOnly: true, secure: true });
     res.status(200).json({
       status: 200,
       message: 'Successfully logged in a user!',
-      data: { accessToken: newSession.accessToken }
+      data: { accessToken: tokens.accessToken }
     });
   } catch (error) {
     next(error);
@@ -63,7 +54,8 @@ export const register = async (req, res, next) => {
       throw createHttpError(409, 'Email in use');
     }
 
-    const newUser = await User.create({ name, email, password });
+    const hashedPassword = await bcrypt.hash(password, 10);
+    const newUser = await User.create({ name, email, password: hashedPassword });
 
     res.status(201).json({
       status: 201,
@@ -82,21 +74,34 @@ export const refresh = async (req, res, next) => {
       throw createHttpError(401, 'Refresh token not provided');
     }
 
-    const currentSession = await Session.findOne({ refreshToken });
-    if (!currentSession || currentSession.refreshTokenValidUntil < Date.now()) {
+    const session = await Session.findOne({ refreshToken });
+    if (!session || new Date(session.refreshTokenValidUntil) < new Date()) {
       throw createHttpError(401, 'Invalid or expired refresh token');
     }
 
-    const newSession = await createSession(currentSession.userId);
+    const user = await User.findById(session.userId);
+    if (!user) {
+      throw createHttpError(401, 'User not found');
+    }
 
-    await Session.findByIdAndDelete(currentSession._id);
+    const tokens = generateTokens();
 
-    setupResponseSession(res, newSession);
+    await Session.findByIdAndDelete(session._id); 
 
+    const newSession = await Session.create({
+      userId: user._id,
+      accessToken: tokens.accessToken,
+      refreshToken: tokens.refreshToken,
+      accessTokenValidUntil: new Date(Date.now() + 15 * 60 * 1000),
+      refreshTokenValidUntil: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000),
+    });
+    console.log('New session created:', newSession);
+
+    res.cookie('refreshToken', tokens.refreshToken, { httpOnly: true, secure: true });
     res.status(200).json({
       status: 200,
       message: 'Successfully refreshed a session!',
-      data: { accessToken: newSession.accessToken }
+      data: { accessToken: tokens.accessToken }
     });
   } catch (error) {
     next(error);
@@ -107,21 +112,17 @@ export const logout = async (req, res, next) => {
   try {
     const { refreshToken } = req.cookies;
     if (!refreshToken) {
-      console.log('No refresh token in cookies');
       throw createHttpError(401, 'Refresh token not provided');
     }
 
-    console.log('Refresh token:', refreshToken);
     const session = await Session.findOne({ refreshToken });
     if (!session) {
-      console.log('Invalid refresh token');
       throw createHttpError(401, 'Invalid refresh token');
     }
 
     await Session.findByIdAndDelete(session._id);
 
     res.clearCookie('refreshToken');
-    res.clearCookie('sessionid');
     res.status(204).send();
   } catch (error) {
     next(error);
