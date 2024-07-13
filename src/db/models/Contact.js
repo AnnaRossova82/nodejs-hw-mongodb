@@ -5,8 +5,12 @@ const contactSchema = new mongoose.Schema({
   phoneNumber: { type: String, required: true },
   email: { type: String },
   isFavourite: { type: Boolean, default: false },
+  photo: {
+    type: String,
+    required: false,
+  },
   contactType: { type: String, enum: ['work', 'home', 'personal'], required: true, default: 'personal' },
-  userId: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true },  
+  userId: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true },
 }, {
   versionKey: false, timestamps: true
 });
