@@ -1,5 +1,13 @@
 import { getAllContacts, getContactById, createContact, updateContact, deleteContact } from '../services/contacts.js';
 import createHttpError from 'http-errors';
+import cloudinary from '../config/cloudinaryConfig.js';
+import fs from 'fs/promises';
+
+const saveFileToCloudinary = async (file, folder) => {
+  const response = await cloudinary.uploader.upload(file.path, { folder });
+  await fs.unlink(file.path);
+  return response.secure_url;
+};
 
 export const getContacts = async (req, res, next) => {
   try {
@@ -37,9 +45,10 @@ export const createContactController = async (req, res, next) => {
     let photoUrl = '';
 
     if (req.file) {
-      photoUrl = req.file.path;
+      photoUrl = await saveFileToCloudinary(req.file, 'contacts');
     }
-
+    console.log("Photo URL: ", photoUrl);
+    
     const newContact = await createContact({
       name, phoneNumber, email, isFavourite, contactType, userId, photo: photoUrl
     });
@@ -59,7 +68,7 @@ export const updateContactController = async (req, res) => {
   const userId = req.user._id;
 
   if (req.file) {
-    updates.photo = req.file.path; 
+    updates.photo = await saveFileToCloudinary(req.file, 'contacts');
   }
 
   const updatedContact = await updateContact(contactId, updates, userId);
@@ -72,7 +81,6 @@ export const updateContactController = async (req, res) => {
     data: updatedContact,
   });
 };
-
 
 export const deleteContactController = async (req, res) => {
   const { contactId } = req.params;
