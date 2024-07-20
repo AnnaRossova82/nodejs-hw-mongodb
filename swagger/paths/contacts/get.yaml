@@ -1,0 +1,96 @@
+get:
+  tags:
+    - Contacts
+  summary: Get all contacts
+  operationId: getContacts
+  description: 'Get a list of all contacts'
+  security:
+    - bearerAuth: []
+  parameters:
+    - in: query
+      name: page
+      schema:
+        type: integer
+        example: 1
+    - in: query
+      name: perPage
+      schema:
+        type: integer
+        example: 10
+    - in: query
+      name: sortBy
+      schema:
+        type: string
+        example: 'name'
+    - in: query
+      name: sortOrder
+      schema:
+        type: string
+        example: 'asc'
+    - in: query
+      name: type
+      schema:
+        type: string
+        example: 'work'
+    - in: query
+      name: isFavourite
+      schema:
+        type: boolean
+        example: true
+  responses:
+    '200':
+      description: 'Successfully found contacts'
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              status:
+                type: integer
+                example: 200
+              message:
+                type: string
+                example: 'Successfully found contacts!'
+              data:
+                type: object
+                required:
+                  - contacts
+                  - totalItems
+                  - totalPages
+                  - page
+                  - perPage
+                  - hasPreviousPage
+                  - hasNextPage
+                properties:
+                  contacts:
+                    type: array
+                    items:
+                      $ref: '../../components/schemas/Contact.yaml'
+                  totalItems:
+                    type: integer
+                    description: 'Total number of contacts'
+                    example: 100
+                  totalPages:
+                    type: integer
+                    description: 'Total number of pages'
+                    example: 10
+                  page:
+                    type: integer
+                    description: 'Current page number'
+                    example: 1
+                  perPage:
+                    type: integer
+                    description: 'Number of contacts per page'
+                    example: 10
+                  hasPreviousPage:
+                    type: boolean
+                    description: 'Indicator if there is a previous page'
+                    example: false
+                  hasNextPage:
+                    type: boolean
+                    description: 'Indicator if there is a next page'
+                    example: true
+    '401':
+      $ref: '../../components/responses/401.yaml'
+    '500':
+      $ref: '../../components/responses/500.yaml'

@@ -10,6 +10,7 @@ dotenv.config();
 
 
 
+
 export const register = async (req, res, next) => {
   try {
     const { name, email, password } = req.body;
@@ -153,7 +154,7 @@ transporter.verify((error, success) => {
   }
 });
 
-
+const secret = process.env.JWT_SECRET;
 export const sendResetEmail = async (req, res, next) => {
   try {
     const { email } = req.body;

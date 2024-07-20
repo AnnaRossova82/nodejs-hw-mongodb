@@ -8,6 +8,7 @@ import authRoutes from './routers/auth.js';
 import errorHandler from './middlewares/errorHandler.js';
 import notFoundHandler from './middlewares/notFoundHandler.js';
 import initMongoConnection from './db/initMongoConnection.js';
+import { swaggerDocs } from './middlewares/swaggerDocs.js';
 
 dotenv.config();
 
@@ -16,7 +17,7 @@ const setupServer = () => {
   const port = process.env.PORT || 3001;
 
   app.use(cors({
-    origin: 'http://localhost:3000', 
+    origin: 'http://localhost:3000',
     credentials: true,
   }));
   app.use(pino({ transport: { target: 'pino-pretty' } }));
@@ -26,11 +27,15 @@ const setupServer = () => {
   app.use('/contacts', contactsRouter);
   app.use('/auth', authRoutes);
 
+  app.use('/uploads', express.static('uploads'));
+  app.use('/api-docs', swaggerDocs());
+
   app.use(notFoundHandler);
   app.use(errorHandler);
 
   app.listen(port, () => {
     console.log(`Server is running on port ${port}`);
+    console.log(`Swagger docs available at http://localhost:${port}/api-docs`);
   });
 };
 
