@@ -1,4 +1,4 @@
-post:
+
   tags:
     - Contacts
   summary: Create a new contact
@@ -19,8 +19,6 @@ post:
         application/json:
           schema:
             $ref: '../../components/schemas/Contact.yaml'
-    '400':
-      $ref: '../../components/responses/400.yaml'
     '401':
       $ref: '../../components/responses/401.yaml'
     '500':

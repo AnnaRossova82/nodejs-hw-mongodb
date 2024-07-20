@@ -26,389 +26,376 @@
   "paths": {
     "/contacts": {
       "get": {
-        "get": {
-          "tags": [
-            "Contacts"
-          ],
-          "summary": "Get all contacts",
-          "operationId": "getContacts",
-          "description": "Get a list of all contacts",
-          "security": [
-            {
-              "bearerAuth": []
+        "tags": [
+          "Contacts"
+        ],
+        "summary": "Get all contacts",
+        "operationId": "getContacts",
+        "description": "Get a list of all contacts",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "in": "query",
+            "name": "page",
+            "schema": {
+              "type": "integer",
+              "example": 1
             }
-          ],
-          "parameters": [
-            {
-              "in": "query",
-              "name": "page",
-              "schema": {
-                "type": "integer",
-                "example": 1
-              }
-            },
-            {
-              "in": "query",
-              "name": "perPage",
-              "schema": {
-                "type": "integer",
-                "example": 10
-              }
-            },
-            {
-              "in": "query",
-              "name": "sortBy",
-              "schema": {
-                "type": "string",
-                "example": "name"
-              }
-            },
-            {
-              "in": "query",
-              "name": "sortOrder",
-              "schema": {
-                "type": "string",
-                "example": "asc"
-              }
-            },
-            {
-              "in": "query",
-              "name": "type",
-              "schema": {
-                "type": "string",
-                "example": "work"
-              }
-            },
-            {
-              "in": "query",
-              "name": "isFavourite",
-              "schema": {
-                "type": "boolean",
-                "example": true
-              }
+          },
+          {
+            "in": "query",
+            "name": "perPage",
+            "schema": {
+              "type": "integer",
+              "example": 10
             }
-          ],
-          "responses": {
-            "200": {
-              "description": "Successfully found contacts",
-              "content": {
-                "application/json": {
-                  "schema": {
-                    "type": "object",
-                    "properties": {
-                      "status": {
-                        "type": "integer",
-                        "example": 200
-                      },
-                      "message": {
-                        "type": "string",
-                        "example": "Successfully found contacts!"
-                      },
-                      "data": {
-                        "type": "object",
-                        "required": [
-                          "contacts",
-                          "totalItems",
-                          "totalPages",
-                          "page",
-                          "perPage",
-                          "hasPreviousPage",
-                          "hasNextPage"
-                        ],
-                        "properties": {
-                          "contacts": {
-                            "type": "array",
-                            "items": {
-                              "$ref": "../../components/schemas/Contact.yaml"
-                            }
-                          },
-                          "totalItems": {
-                            "type": "integer",
-                            "description": "Total number of contacts",
-                            "example": 100
-                          },
-                          "totalPages": {
-                            "type": "integer",
-                            "description": "Total number of pages",
-                            "example": 10
-                          },
-                          "page": {
-                            "type": "integer",
-                            "description": "Current page number",
-                            "example": 1
-                          },
-                          "perPage": {
-                            "type": "integer",
-                            "description": "Number of contacts per page",
-                            "example": 10
-                          },
-                          "hasPreviousPage": {
-                            "type": "boolean",
-                            "description": "Indicator if there is a previous page",
-                            "example": false
-                          },
-                          "hasNextPage": {
-                            "type": "boolean",
-                            "description": "Indicator if there is a next page",
-                            "example": true
+          },
+          {
+            "in": "query",
+            "name": "sortBy",
+            "schema": {
+              "type": "string",
+              "example": "name"
+            }
+          },
+          {
+            "in": "query",
+            "name": "sortOrder",
+            "schema": {
+              "type": "string",
+              "example": "asc"
+            }
+          },
+          {
+            "in": "query",
+            "name": "type",
+            "schema": {
+              "type": "string",
+              "example": "work"
+            }
+          },
+          {
+            "in": "query",
+            "name": "isFavourite",
+            "schema": {
+              "type": "boolean",
+              "example": true
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successfully found contacts",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "type": "integer",
+                      "example": 200
+                    },
+                    "message": {
+                      "type": "string",
+                      "example": "Successfully found contacts!"
+                    },
+                    "data": {
+                      "type": "object",
+                      "required": [
+                        "contacts",
+                        "totalItems",
+                        "totalPages",
+                        "page",
+                        "perPage",
+                        "hasPreviousPage",
+                        "hasNextPage"
+                      ],
+                      "properties": {
+                        "contacts": {
+                          "type": "array",
+                          "items": {
+                            "$ref": "#/components/schemas/Contact"
                           }
+                        },
+                        "totalItems": {
+                          "type": "integer",
+                          "description": "Total number of contacts",
+                          "example": 100
+                        },
+                        "totalPages": {
+                          "type": "integer",
+                          "description": "Total number of pages",
+                          "example": 10
+                        },
+                        "page": {
+                          "type": "integer",
+                          "description": "Current page number",
+                          "example": 1
+                        },
+                        "perPage": {
+                          "type": "integer",
+                          "description": "Number of contacts per page",
+                          "example": 10
+                        },
+                        "hasPreviousPage": {
+                          "type": "boolean",
+                          "description": "Indicator if there is a previous page",
+                          "example": false
+                        },
+                        "hasNextPage": {
+                          "type": "boolean",
+                          "description": "Indicator if there is a next page",
+                          "example": true
                         }
                       }
                     }
                   }
                 }
               }
-            },
-            "401": {
-              "$ref": "../../components/responses/401.yaml"
-            },
-            "500": {
-              "$ref": "../../components/responses/500.yaml"
             }
+          },
+          "401": {
+            "$ref": "#/components/responses/401"
+          },
+          "500": {
+            "$ref": "#/components/responses/500"
           }
         }
       },
       "post": {
-        "post": {
-          "tags": [
-            "Contacts"
-          ],
-          "summary": "Create a new contact",
-          "operationId": "createContact",
-          "description": "Create a new contact in the system.",
-          "security": [
-            {
-              "bearerAuth": []
+        "tags": [
+          "Contacts"
+        ],
+        "summary": "Create a new contact",
+        "operationId": "createContact",
+        "description": "Create a new contact in the system.",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "multipart/form-data": {
+              "schema": {
+                "$ref": "#/components/schemas/Contact"
+              }
             }
-          ],
-          "requestBody": {
-            "required": true,
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Contact created successfully",
             "content": {
-              "multipart/form-data": {
+              "application/json": {
                 "schema": {
-                  "$ref": "../../components/schemas/Contact.yaml"
+                  "$ref": "#/components/schemas/Contact"
                 }
               }
             }
           },
-          "responses": {
-            "201": {
-              "description": "Contact created successfully",
-              "content": {
-                "application/json": {
-                  "schema": {
-                    "$ref": "../../components/schemas/Contact.yaml"
-                  }
-                }
-              }
-            },
-            "400": {
-              "$ref": "../../components/responses/400.yaml"
-            },
-            "401": {
-              "$ref": "../../components/responses/401.yaml"
-            },
-            "500": {
-              "$ref": "../../components/responses/500.yaml"
-            }
+          "401": {
+            "$ref": "#/components/responses/401"
+          },
+          "500": {
+            "$ref": "#/components/responses/500"
           }
         }
       }
     },
     "/contacts/{contactId}": {
       "get": {
-        "get": {
-          "tags": [
-            "Contacts"
-          ],
-          "summary": "Get contact by ID",
-          "operationId": "getContactById",
-          "description": "Get a specific contact by its ID",
-          "security": [
-            {
-              "bearerAuth": []
-            }
-          ],
-          "parameters": [
-            {
-              "in": "path",
-              "name": "contactId",
-              "required": true,
-              "schema": {
-                "type": "string",
-                "example": "60c72b1f9fd3c2a834a0b5d2"
-              }
-            }
-          ],
-          "responses": {
-            "200": {
-              "description": "Successfully found contact by ID",
-              "content": {
-                "application/json": {
-                  "schema": {
-                    "type": "object",
-                    "properties": {
-                      "status": {
-                        "type": "integer",
-                        "example": 200
-                      },
-                      "message": {
-                        "type": "string",
-                        "example": "Successfully found contact with id 60c72b1f9fd3c2a834a0b5d2!"
-                      },
-                      "data": {
-                        "$ref": "../../../components/schemas/Contact.yaml"
-                      }
-                    }
-                  }
-                }
-              }
-            },
-            "401": {
-              "$ref": "../../../components/responses/401.yaml"
-            },
-            "404": {
-              "$ref": "../../../components/responses/404.yaml"
-            },
-            "500": {
-              "$ref": "../../../components/responses/500.yaml"
+        "tags": [
+          "Contacts"
+        ],
+        "summary": "Get contact by ID",
+        "operationId": "getContactById",
+        "description": "Get a specific contact by its ID",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "contactId",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "example": "60c72b1f9fd3c2a834a0b5d2"
             }
           }
-        }
-      },
-      "patch": {
-        "patch": {
-          "tags": [
-            "Contacts"
-          ],
-          "summary": "Update a contact by ID",
-          "operationId": "updateContactById",
-          "description": "Update an existing contact by its ID",
-          "security": [
-            {
-              "bearerAuth": []
-            }
-          ],
-          "parameters": [
-            {
-              "in": "path",
-              "name": "contactId",
-              "required": true,
-              "schema": {
-                "type": "string",
-                "example": "60c72b1f9fd3c2a834a0b5d2"
-              }
-            }
-          ],
-          "requestBody": {
-            "required": true,
+        ],
+        "responses": {
+          "200": {
+            "description": "Successfully found contact by ID",
             "content": {
-              "multipart/form-data": {
+              "application/json": {
                 "schema": {
                   "type": "object",
                   "properties": {
-                    "name": {
-                      "type": "string"
+                    "status": {
+                      "type": "integer",
+                      "example": 200
                     },
-                    "phoneNumber": {
-                      "type": "string"
-                    },
-                    "email": {
-                      "type": "string"
-                    },
-                    "isFavourite": {
-                      "type": "boolean"
-                    },
-                    "contactType": {
+                    "message": {
                       "type": "string",
-                      "enum": [
-                        "work",
-                        "home",
-                        "personal"
-                      ]
+                      "example": "Successfully found contact with id 60c72b1f9fd3c2a834a0b5d2!"
                     },
-                    "photo": {
-                      "type": "string",
-                      "format": "binary"
+                    "data": {
+                      "$ref": "#/components/schemas/Contact"
                     }
                   }
                 }
               }
             }
           },
-          "responses": {
-            "200": {
-              "description": "Successfully updated contact",
-              "content": {
-                "application/json": {
-                  "schema": {
-                    "type": "object",
-                    "properties": {
-                      "status": {
-                        "type": "integer",
-                        "example": 200
-                      },
-                      "message": {
-                        "type": "string",
-                        "example": "Successfully patched a contact!"
-                      },
-                      "data": {
-                        "$ref": "../../../components/schemas/Contact.yaml"
-                      }
+          "401": {
+            "$ref": "#/components/responses/401"
+          },
+          "404": {
+            "$ref": "#/components/responses/404"
+          },
+          "500": {
+            "$ref": "#/components/responses/500"
+          }
+        }
+      },
+      "patch": {
+        "tags": [
+          "Contacts"
+        ],
+        "summary": "Update a contact by ID",
+        "operationId": "updateContactById",
+        "description": "Update an existing contact by its ID",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "contactId",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "example": "60c72b1f9fd3c2a834a0b5d2"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "multipart/form-data": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "name": {
+                    "type": "string"
+                  },
+                  "phoneNumber": {
+                    "type": "string"
+                  },
+                  "email": {
+                    "type": "string"
+                  },
+                  "isFavourite": {
+                    "type": "boolean"
+                  },
+                  "contactType": {
+                    "type": "string",
+                    "enum": [
+                      "work",
+                      "home",
+                      "personal"
+                    ]
+                  },
+                  "photo": {
+                    "type": "string",
+                    "format": "binary"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successfully updated contact",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "type": "integer",
+                      "example": 200
+                    },
+                    "message": {
+                      "type": "string",
+                      "example": "Successfully patched a contact!"
+                    },
+                    "data": {
+                      "$ref": "#/components/schemas/Contact"
                     }
                   }
                 }
               }
-            },
-            "401": {
-              "$ref": "../../../components/responses/401.yaml"
-            },
-            "404": {
-              "$ref": "../../../components/responses/404.yaml"
-            },
-            "500": {
-              "$ref": "../../../components/responses/500.yaml"
             }
+          },
+          "401": {
+            "$ref": "#/components/responses/401"
+          },
+          "404": {
+            "$ref": "#/components/responses/404"
+          },
+          "500": {
+            "$ref": "#/components/responses/500"
           }
         }
       },
       "delete": {
-        "delete": {
-          "tags": [
-            "Contacts"
-          ],
-          "summary": "Delete a contact by ID",
-          "operationId": "deleteContactById",
-          "description": "Delete a specific contact by its ID",
-          "security": [
-            {
-              "bearerAuth": []
-            }
-          ],
-          "parameters": [
-            {
-              "in": "path",
-              "name": "contactId",
-              "required": true,
-              "schema": {
-                "type": "string"
-              },
-              "example": "60c72b1f9fd3c2a834a0b5d2"
-            }
-          ],
-          "responses": {
-            "204": {
-              "description": "Successfully deleted contact"
+        "tags": [
+          "Contacts"
+        ],
+        "summary": "Delete a contact by ID",
+        "operationId": "deleteContactById",
+        "description": "Delete a specific contact by its ID",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "contactId",
+            "required": true,
+            "schema": {
+              "type": "string"
             },
-            "401": {
-              "$ref": "../../../components/responses/401.yaml"
-            },
-            "404": {
-              "$ref": "../../../components/responses/404.yaml"
-            },
-            "500": {
-              "$ref": "../../../components/responses/500.yaml"
-            }
+            "example": "60c72b1f9fd3c2a834a0b5d2"
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "Successfully deleted contact"
+          },
+          "401": {
+            "$ref": "#/components/responses/401"
+          },
+          "404": {
+            "$ref": "#/components/responses/404"
+          },
+          "500": {
+            "$ref": "#/components/responses/500"
           }
         }
       }

@@ -1,4 +1,4 @@
-get:
+
   tags:
     - Contacts
   summary: Get contact by ID
