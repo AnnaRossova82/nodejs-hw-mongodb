@@ -2,13 +2,13 @@ tags:
   - Contacts
 summary: Create a new contact
 operationId: createContact
-description: Create a new contact in the system.
+description: 'Create a new contact with payload'
 security:
   - bearerAuth: []
 requestBody:
   required: true
   content:
-    application/json:
+    multipart/form-data:
       schema:
         type: object
         required:
@@ -16,25 +16,30 @@ requestBody:
           - phoneNumber
         properties:
           name:
+            description: "Contact's name"
             type: string
-            minLength: 3
-            maxLength: 20
             example: 'John Doe'
           phoneNumber:
+            description: "Contact's phone number"
             type: string
-            minLength: 3
-            maxLength: 20
             example: '+123456789'
           email:
+            description: "Contact's email address"
             type: string
             format: email
             example: 'johndoe@example.com'
           isFavourite:
+            description: "Whether the contact is marked as favourite"
             type: boolean
             example: false
           contactType:
+            description: "Type of contact (e.g., work, home, personal)"
             type: string
             example: 'work'
+          photo:
+            description: "Contact's photo"
+            type: string
+            format: binary
 responses:
   '201':
     description: Contact created successfully
@@ -42,13 +47,17 @@ responses:
       application/json:
         schema:
           type: object
+          required:
+            - status
+            - message
+            - data
           properties:
             status:
               type: integer
               example: 201
             message:
               type: string
-              example: 'Contact created successfully'
+              example: 'Successfully created contact!'
             data:
               $ref: '../../components/schemas/Contact.yaml'
   '401':
